@@ -1,0 +1,14 @@
+//доб эл-а в начало списка
+
+void add2begin(List* listik, node_type val) { 
+    ListNode* new_node = create_node(val);
+    if (listik->len == 0) {
+        listik->first = new_node;
+        listik->last = new_node;
+        listik->len = 1;
+    } else {
+        new_node->next = listik->first;
+        listik->first = new_node;
+        listik->len++;
+    }
+}
