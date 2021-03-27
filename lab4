@@ -1,14 +1,166 @@
-//доб эл-а в начало списка
+//тут нет (пока) пункта с удалением всего списка
 
-void add2begin(List* listik, node_type val) { 
+#include <iostream>;
+
+typedef int node_type;
+
+//обязательный блок (создает и тд, и тп)
+
+struct ListNode{
+    node_type value;
+    ListNode* next;
+};
+
+struct List {
+    ListNode* first;
+    ListNode* last;
+    int len;
+};
+
+ListNode* create_node(node_type value) {
+    ListNode* node = new ListNode;
+    node->value = value;
+    return node;
+}
+
+List* create_emp(){
+    List* emp_list = new List;
+    emp_list->first = nullptr;
+    emp_list->last = nullptr;
+    emp_list->len = 0;
+
+    return emp_list;
+}
+
+void add_end(List* list_1, node_type val) {  //доб эл-а в конец списка
     ListNode* new_node = create_node(val);
-    if (listik->len == 0) {
-        listik->first = new_node;
-        listik->last = new_node;
-        listik->len = 1;
+    if (list_1->len == 0) {
+        list_1->first = new_node;
+        list_1->last = new_node;
+        list_1->len = 1;
     } else {
-        new_node->next = listik->first;
-        listik->first = new_node;
-        listik->len++;
+        list_1->last->next = new_node;
+        list_1->last = new_node;
+        list_1->len++;
     }
 }
+
+
+
+
+
+void add_begin(List* list_1, node_type val) {  //доб эл-а в начало списка
+    ListNode* new_node = create_node(val);
+    if (list_1->len == 0) {
+        list_1->first = new_node;
+        list_1->last = new_node;
+        list_1->len = 1;
+    } else {
+        new_node->next = list_1->first;
+        list_1->first = new_node;
+        list_1->len++;
+    }
+}
+
+
+
+
+
+void remove_val(List* list_1, node_type val) {  //уд пo значению
+    if (list_1->first->value == val) {
+        list_1->first = list_1->first->next;
+        if (list_1->len == 1) {
+            list_1->last = nullptr;
+        }
+        list_1->len--;
+        
+    } else {
+        ListNode* current = list_1->first;
+        for (int i = 0; i < list_1->len - 1; ++i) {
+            if (current->next->value == val) {
+                current->next = current->next->next;
+                if (i == list_1->len - 2) {
+                    list_1->last = current;
+                }
+                list_1->len--;
+            }
+        }
+    }
+}
+
+
+
+
+
+
+void add_ind(List* list_1, int index, node_type value) {      ///добавление по индексу
+    if (index > list_1->len || index < 0) {
+    
+//тут, если ввести значение меньше нуля или больше, чем длина листа, то программа скажет, что все плохо
+        
+        std::cout << "ерор";
+    }
+    ListNode* new_node = create_node(value);
+    if (list_1->len == 0) {
+        list_1->first = new_node;
+        list_1->last = new_node;
+        list_1->len = 1;
+        return;
+    }
+    if (index == 0) {
+        new_node->next = list_1->first;
+        list_1->first = new_node;
+        list_1->len++;
+        return;
+    }
+    ListNode* current = list_1->first;
+    for (int i = 0; i < index - 1; ++i) {
+        current = current->next;
+    }
+    new_node->next = current->next;
+    current->next = new_node;
+    if (index == list_1->len) {
+        list_1->last = new_node;
+    }
+    list_1->len++;
+}
+
+void del_ind(List* list_1, int index) {           //удаление по индексу
+    if (index < 0 || index >= list_1->len) {
+        std::cout << "ерор ";
+    }
+    
+    
+    if (list_1->len == 1) {
+        delete list_1->first;
+        list_1->first = nullptr;
+        list_1->last = nullptr;
+        list_1->len = 0;
+        
+        return;
+    }
+    
+    
+    if (index == 0) {
+        ListNode* old_element = list_1->first;
+        list_1->first = old_element->next;
+        delete old_element;
+        list_1->len--;
+        
+        return;
+    }
+    
+    
+    
+    
+    
+    ListNode* current = list_1->first;
+    for (int i = 0; i < index - 1; ++i) {
+        current = current->next;
+    }
+    ListNode* old_element = current->next;
+    current->next = old_element->next;
+    delete old_element;
+    list_1->len--;
+}
+
